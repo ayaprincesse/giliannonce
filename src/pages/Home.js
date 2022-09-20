@@ -1,5 +1,9 @@
 import * as React from 'react';
 import { useState,useEffect,useRef } from 'react'
+import Pause from '../components/engie/Pause'
+import Traitement from '../components/engie/Traitement'
+import Sonnerie from '../components/engie/Sonnerie'
+import Posttravail from '../components/engie/Posttravail'
 // @mui material components
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
@@ -9,18 +13,14 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Autocomplete from '@mui/material/Autocomplete';
-
+import Calendartest  from "../components/Calendar.js";
+import Calendar1 from "../components/Calendar1.js";
 ///import { createStyles, makeStyles } from '@mui/styles';
-// Material Kit 2 React components
-import MKBox from "components/MKBox";
-import MKButton from "components/MKButton";
-import MKTypography from "components/MKTypography";
-import MKInput from "components/MKInput";
-
+// import MyCalendar from "../components/calendar3"
+import Barchart from '../components/charts2/BarChart'
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "assets/theme";
-// Images
-import mainImg from "assets/images/lemon.jpeg";
+
 
 //import DefaultFooter from "examples/Footers/DefaultFooter";
 
@@ -30,73 +30,85 @@ import mainImg from "assets/images/lemon.jpeg";
 import "../../node_modules/slick-carousel/slick/slick.css"; 
 import "../../node_modules/slick-carousel/slick/slick-theme.css";
 
-/*import Card from "custom-components/Card";*/
-import Slider from "react-slick";
-
-import LeftArrow from "assets/images/left-arrow.png"
-import RightArrow from "assets/images/right-arrow.png"
-import newsletterimg from "assets/images/annonce1.jpeg";
-
-/*import { Contrast } from '@mui/icons-material';*/
-
-import Header1 from '../Header';
-import Footer1 from '../Footer';
-import footerRoutes from "footer.routes";
-
-import { alignProperty } from '@mui/material/styles/cssUtils';
-
 import axios from 'axios';
 import * as urls from 'apis';
 import {Link} from "react-router-dom";
-
+import HHermes from 'components/kpiengie/HHermes';
+import SPHLog from 'components/kpiengie/SPHLog';
+import SPHCom from 'components/kpiengie/SPHCom';
+import CA_AGI from 'components/kpiengie/CA_AGI';
+import CA_BRUT from 'components/kpiengie/CA_BRUT';
+import CAperH from 'components/kpiengie/CAperH';
+import FTperH from 'components/kpiengie/FTperH';
 const Home1 = function Home() {
-
-  const [categories, setCategoriesList] = useState([]);
-  const [annonces, setAnnoncesList] = useState([]);
-  const [villes, setVillesList] = useState([]);
+  const [engie, setEngieList]= useState([]);
+  const [datej, setDatejSelect] = useState([]);
+  const [plansdh, setPlanSelect] = useState([]);
+  const [traitement, setTraitementSelect]= useState([]);
+  const [sonnerie, setSonnerieSelect]= useState([]);
+  const [posttravail, setPosttravailSelect]= useState([]);
+  const [hhermes, setHhermesSelect]= useState([]);
+  const [sphlog, setSphLogSelects]= useState([]);
+  const [sphcom, setSphComSelects]= useState([]);
+  const [caagi, setCaAgiSelects] = useState([]);
+  const [cabrut, setCaBrutSelects]= useState([]);
+  const [cah, setCAHSelects]= useState([]);
+  const [fth , setFTHSelects]= useState([]);
   useEffect(async () => {
-    //get categories
-    await axios.get(urls.url_main+"/categorie")
+    //get engie 
+    await axios.get(urls.url_main+"/engie")
     .then((response) => {
-        setCategoriesList(response.data.list_categories);
+        setEngieList(response.data.list_engie)
+        setDatejSelect(response.data.list_engie)
+        setTraitementSelect(response.data.list_engie)
+        setPlanSelect(response.data.list_engie)
+        setSonnerieSelect(response.data.list_engie)
+        setPosttravailSelect(response.data.list_engie);
     })
     .catch((error) => {
-        console.log(error);
-        alert("une erreur s'est produite lors du traitement de votre demande");
+        console.log(error.response);
+        alert("une erreur s'est produite home.js ligne 59");
     })
-    //get annonces
-    await axios.get(urls.url_main+"/annonce")
+
+        
+    // get hhermes
+    await axios.get(urls.url_main+"/kpiengie")
     .then((response) => {
-      console.log(response.data.list_annonces)
-      setAnnoncesList(response.data.list_annonces);
+     setHhermesSelect(response.data.list_kpiengie);
+     setSphLogSelects(response.data.list_kpiengie);
+     setSphComSelects(response.data.list_kpiengie);
+     setCaAgiSelects(response.data.list_kpiengie);
+     setCaBrutSelects(response.data.list_kpiengie);
+     setCAHSelects(response.data.list_kpiengie);
+     setFTHSelects(response.data.list_kpiengie);
     })
-    .catch((error) => {
-        console.log("error getannonces",error);
-        alert("une erreur s'est produite lors du traitement de votre demande");
-    })
-    //get villes
-    await axios.get(urls.url_main+"/annonce/villes")
-    .then((response) => {
-      console.log(response.data.list_villes)
-      setVillesList(response.data.list_villes);
-    })
-    .catch((error) => {
-        console.log("error getvilles",error);
-        alert("une erreur s'est produite lors du traitement de votre demande");
-    })
+   .catch((error) => {
+    console.log(error.response);
+    alert("une erreur s'est produite home.js ligne 78");
+        })
   },[]);
 
 
   return (
     <ThemeProvider theme={theme}>
     <CssBaseline />
-    <HeroSection listCat={categories} listVilles={villes}/> 
-    <TestCarouselCategories list={categories} />
-    <TestCarouselAnnonces list={annonces}/>
-    <Newsletter/>
-    <MKBox pt={6} px={1} bgColor="white">
-    <Footer1 content={footerRoutes}/> 
-    </MKBox>
+     {/* <HeroSection listEng={engie} /> 
+    <Calendartest /> */}
+    <Calendar1 listDate={datej}/>
+    <Stack direction="row" spacing={1}>
+    <Pause listPlan={plansdh}/>
+    <Traitement listTrait={traitement}/>
+    <Sonnerie listSonn={sonnerie}/>
+    <Posttravail listPost={posttravail}/>
+    <HHermes listHher={hhermes}/>
+    <SPHLog listSph={sphlog}/>
+    <SPHCom listSphC = {sphcom}/>
+    <CA_AGI listCaAgi={caagi}/>
+    <CA_BRUT listCaBrut={cabrut}/>
+    <CAperH listCAH={cah}/>
+    <FTperH listFTH={fth}/>
+    </Stack>
+    {/* <MyCalendar/> */}
     </ThemeProvider>
   );
 }
@@ -105,350 +117,27 @@ export default Home1;
 
 
 function HeroSection(props) {
- 
-  const [categoriesSelect, setcategoriesSelect] = useState([]);
-  const [villesSelect, setvillesSelect] = useState([]);
-  const [motcle, setmotCle] = useState('');
-  const [categorie, setCategorie] = useState('');
-  const [Ville, setVille] = useState('');
-  const [annoncesTrouvees, setAnnoncesTrouvees] = useState([]);
-  const myRef = useRef(null)
+  const [engieSelect, setengieSelect] = useState([]);
+  const [engie, setEngie] = useState('');
   
   useEffect(() => {
     var options2=[];
-    props.listCat.map((element,i) => {
-      options2.push({label:element.Nom,id:element.Id})
+    props.listEng.map((element,i) => {
+      options2.push({label:element.Agent,id:element.Id})
     });
-    setcategoriesSelect(options2);
+    setengieSelect(options2);
     console.log("options2",options2);
-  },[props.listCat])
-
-  useEffect(() => {
-    var options1=[];
-    props.listVilles.map((element,i) => {
-      options1.push({label:element.Ville,id:element.Id})
-    });
-    setvillesSelect(options1);
-    console.log("options1",options1);
-  },[props.listVilles])
+  },[props.listEng])
   
-  const displayAnnoncesTrouves= () => {
-    if(annoncesTrouvees.length>0){
-      myRef.current.scrollIntoView();  
-      return(
-        <TestCarouselAnnoncesRecherche list={annoncesTrouvees}/>
-      )
-    }
-  }
   return ( 
-    <MKBox bgColor="white">
-  <MKBox
-  display="flex"
-  alignItems="center"
-  minHeight="70vh"
-  sx={{
-    //backgroundImage: ({ palette: { gradients }, functions: { linearGradient, rgba } }) => `${linearGradient(rgba(gradients.dark.main, 0.5), rgba(gradients.dark.state, 0.5))}, url(${bgImage})`,
-    //backgroundSize: "cover",
-    //backgroundPosition: "center",
-    backgroundColor:'#FFFFFF'
-  }} > 
-
-  <Container> 
-  <Stack direction="row" spacing={30} mt={6} mb={7}> 
-    <Grid container item xs={12} md={7} lg={6} flexDirection="column" justifyContent="center">
-        <MKTypography
-          variant="h1"
-          color="black"
-          mb={3}
-          sx={({ breakpoints, typography: { size } }) => ({
-            [breakpoints.down("md")]: {
-              fontSize: size["3xl"],
-            },
-          })}
-        >
-          Trouver l'annonce qui vous convient !
-        </MKTypography>
-        <MKTypography variant="body1" color="484848" opacity={0.8} pr={6} mr={6}>
-          Vous cherchez des meubles, des appareils, un véhicule, ou meme un logement? Vous trouverez surement ce qu'il vous faut sur GILI.Com 
-        </MKTypography>
-        <Stack direction="row" spacing={1} mt={3} alignItems="center" justifyContent="center">
-          <TextField  id="outlined-basic" label="Recherche par mot clé" variant="outlined" 
-          onChange={(e)=>setmotCle(e.target.value)}
-          value={motcle}
-          />
-          <Autocomplete
-      disablePortal
-      id="combo-box-demo"
-      options={villesSelect}
-      value={Ville}
-      onChange={(event, selectedOption) => {
-        var selectedV=selectedOption.label;
-        axios.get(urls.url_main+"/annonce/ville/"+selectedV)
-        .then((response) => {
-          console.log(response.data.annonces.length)
-            if(response.data.annonces.length>0){
-              setAnnoncesTrouvees(response.data.annonces);
-              setVille('');
-            }
-            else{
-              setVille('');
-              setAnnoncesTrouvees([]);
-              setTimeout(() => {
-                alert("aucune annonce trouvée")
-              }, "500")
-            }
-      });
-      }
-      }
-      sx={{ width: 150 }}
-      renderInput={(params) => <TextField {...params} label="Ville" />}
-    /> 
-    <Autocomplete disablePortal  id="combo-box-demo" options={categoriesSelect}
-    value={categorie}
-    onChange={(event, selectedOption) => {
-      var selectedCat=selectedOption.label;
-      axios.get(urls.url_main+"/annonce/categorie/"+selectedCat)
-      .then((response) => {
-        console.log(response.data.annonce.length)
-          if(response.data.annonce.length>0){
-            setAnnoncesTrouvees(response.data.annonce);
-            setCategorie('');
-          }
-          else{
-            setCategorie('');
-            setAnnoncesTrouvees([]);
-            setTimeout(() => {
-              alert("aucune annonce trouvée")
-            }, "500")
-          }
-    });
-    }
-    }
-     sx={{ width: 150 }}
-       renderInput={(params) => <TextField {...params} label="Catégorie"/>} 
+    <Box bgColor="white">
+    <Stack direction="row" spacing={1} mt={3} alignItems="center" justifyContent="center">
+    <Autocomplete disablePortal  id="combo-box-demo" options={engieSelect}
+    value={engie}
+     sx={{ width: 300 }}
+       renderInput={(params) => <TextField {...params} label="Agent"/>} 
     />
-         <MKButton color="black" onClick={ () => { 
-          // Resultatresearch(this.TextField.keywordrecherche.value);
-          axios.get(urls.url_main+"/annonce/motcle/"+motcle)
-          .then((response) => {
-            console.log(response.data.annonce.length)
-              if(response.data.annonce.length>0){
-                setAnnoncesTrouvees(response.data.annonce);
-                setmotCle('');
-              }
-              else{       
-                setAnnoncesTrouvees([]);
-                setTimeout(() => {
-                  alert("aucune annonce trouvée")
-                  setmotCle('');
-                }, "500")
-              }
-          })
-          .catch((error) => {
-              setmotCle('');
-              console.log("error getannoncesbymotcle",error);
-              alert("une erreur s'est produite lors du traitement de votre demande");
-          })
-          
-           }}>
-             RECHERCHER
-          </MKButton>
-       </Stack>
-      </Grid>
-      <Box
-        component="img"
-        sx={{
-          //height: 233,
-          //width: 350,
-          minWidth: { lg : 300 },
-          maxHeight: { lg: 500 },
-        }}
-        alt="The house from the offer."
-        src={mainImg}
-      />
-    </Stack>
-  </Container>
-  </MKBox>
-  <div ref={myRef}>
-  {displayAnnoncesTrouves()}
-  </div>
-  </MKBox>
+   </Stack>
+  </Box>
   );
 }
-
-
-const SlickArrowLeft = ({ currentSlide, slideCount, ...props }) => (
-  <img src={LeftArrow} alt="prevArrow" {...props} />
-);
-
-const SlickArrowRight = ({ currentSlide, slideCount, ...props }) => (
-  <img src={RightArrow} alt="nextArrow" {...props} />
-);
-
-const settings = {
-      dots: false,
-      infinite: true,
-      speed: 500,
-      slidesToShow: 4,
-      slidesToScroll: 2,
-      prevArrow: <SlickArrowLeft />,
-      nextArrow: <SlickArrowRight />,
-    };
-
-
-function TestCarouselCategories(props)
-  {/*console.log("props",props.list);*/
-  const displaycats = (props) => {
-    const cats =props.list;
-    if (cats.length > 0)
-    return (
-         props.list.map((element,i) =>{
-         const link="/ResultatRecherche/"+element.Nom;
-         return (<Link to={link}>
-          <Container>
-          <Box
-          component="img"
-          sx={{
-            height: 200,
-            width: 400,
-            minWidth: { lg : 150 },
-            minHeight: { lg: 150 },
-            maxWidth: { lg : 180 },
-            maxHeight: { lg: 200 },
-          }}
-          src={urls.url_categories+element.image}
-        /><Typography mb={4}>{element.Nom}</Typography>
-            </Container>
-            </Link> 
-          );})
-    );
-    else { return (<h2>nothing yet</h2>)}
-  }
-
-  return (
-    <MKBox bgColor="white" pb={20}>
-        <Typography align="center" mb={4}>Les Catégories</Typography>
-        <Container maxWidth="sm">
-        <Slider {...settings}>
-        {displaycats(props)}
-        </Slider>
-        </Container>
-      </MKBox>
-  );
-}
-
-function TestCarouselAnnonces(props){
-  const displayannonces = (props) => {
-    const ads =props.list;
-    if (ads.length > 0)
-    return (
-         props.list.map((element,i) => {
-         const link="/AnnonceDetails/"+element.Id;
-         return (<Link to={link}>
-          <Container>
-          <Box
-          component="img"
-          sx={{
-            height: 200,
-            width: 400,
-            minWidth: { lg : 150 },
-            minHeight: { lg: 150 },
-            maxWidth: { lg : 180 },
-            maxHeight: { lg: 200 },
-          }}
-          //src={cat1}
-          src={urls.url_annonces+element.imagesannonce[0].image}
-        /><Typography mb={4}>{element.Titre}/{element.Ville}</Typography>
-            </Container>
-          </Link>);
-         }
-          )
-    );
-    else { return (<h2>nothing yet</h2>)}
-  }
-  return (
-    <MKBox bgColor="white" pb={10}>
-        <Typography align="center" mb={5}>Quelques annonces récentes</Typography>
-        <Container maxWidth="sm">
-        <Slider {...settings}>
-            {displayannonces(props)}
-       </Slider>
-        </Container>
-      </MKBox>
-  );
-}
-
-function TestCarouselAnnoncesRecherche(props){
-  const displayannonces = (props) => {
-    const ads =props.list;
-    if (ads.length > 0)
-    return (
-         props.list.map((element,i) => {
-         const link="/AnnonceDetails/"+element.Id;
-         return (<Link to={link}>
-          <Container>
-          <Box
-          component="img"
-          sx={{
-            height: 200,
-            width: 400,
-            minWidth: { lg : 150 },
-            minHeight: { lg: 150 },
-            maxWidth: { lg : 180 },
-            maxHeight: { lg: 200 },
-          }}
-          //src={cat1}
-          src={urls.url_annonces+element.imagesannonce[0].image}
-        /><Typography mb={4}>{element.Titre}/{element.Ville}</Typography>
-            </Container>
-            </Link>
-         );}
-          )
-    );
-    else { return (<h2></h2>)}
-  }
-  return (
-    <MKBox bgColor="white" pb={10}>
-        <Typography align="center" mb={5}>Annonces trouvées</Typography>
-        <Container maxWidth="sm">
-        <Slider {...settings}>
-            {displayannonces(props)}
-       </Slider>
-        </Container>
-      </MKBox>
-  );
-}
-
-function Newsletter() {
-  return (
-    <MKBox component="section" bgColor="white">
-      <Container>
-        <Grid container alignItems="center">
-          <Grid item md={6} sx={{ ml: { xs: 0, lg: 3 }, mb: { xs: 12, md: 0 } }}>
-            <MKTypography variant="h4">Recevez toutes les nouveautés par Mail !</MKTypography>
-            <MKTypography variant="body2" color="text" mb={3}>
-              Inscrivez-vous pour notre newsletter
-            </MKTypography>
-            <Grid container spacing={1}>
-              <Grid item xs={8}>
-                <MKInput type="email" label="Votre Email ..." fullWidth />
-              </Grid>
-              <Grid item xs={4}>
-                <MKButton color="primary" sx={{ height: "100%" }}>
-                  Subscribe
-                </MKButton>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} md={5} sx={{ ml: "auto" }}>
-            <MKBox position="relative">
-              <MKBox component="img" src={newsletterimg} alt="macbook" width="100%" />
-            </MKBox>
-          </Grid>
-        </Grid>
-      </Container>
-    </MKBox>
-  );
-}
-
-
